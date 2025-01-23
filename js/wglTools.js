@@ -164,6 +164,8 @@ function createMainCanvas(w,h){
 	const can = document.createElement("canvas")
 	can.setAttribute("style",
 	`
+              width:95vw;
+	      height:94vw;
 			position:absolute;
 			left:5%;
 			top:5%;
@@ -173,8 +175,8 @@ function createMainCanvas(w,h){
 			background:#303030;
 	`)
 	document.body.appendChild(can)
-	can.width = w
-	can.height = h
+	//can.width = w
+	//can.height = h
 	return can
 }
 
