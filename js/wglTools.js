@@ -167,16 +167,16 @@ function createMainCanvas(w,h){
               width:94vw;
 	      height:94vw;
 			position:absolute;
-			left:3%;
-			top:3%;
+			left:3vw;
+			top:3vw;
 			margin:0;
 			border-style:blue;
 			border:5px;
 			background:#303030;
 	`)
 	document.body.appendChild(can)
-	//can.width = w
-	//can.height = h
+	can.width = w
+	can.height = h
 	return can
 }
 
