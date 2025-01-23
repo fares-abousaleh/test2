@@ -168,8 +168,7 @@ function createMainCanvas(w,h){
 			left:40px;
 			top:40px;
 			margin:0;
-			border-style:blue;
-			border:5px;
+			
 			background:#303030;
 	`)
 	document.body.appendChild(can)
