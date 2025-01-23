@@ -165,8 +165,8 @@ function createMainCanvas(w,h){
 	can.setAttribute("style",
 	`
 			position:absolute;
-			left:40px;
-			top:40px;
+			left:4px;
+			top:4px;
 			margin:0;
 			
 			background:#303030;
