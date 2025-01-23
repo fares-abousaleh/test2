@@ -114,7 +114,7 @@ function animate1(t){
 }
 
 document.body.onload = function(){		
-	Engine.start(500,500)
+	Engine.start(750,750)
 	for(let i=0;i<20;i++)
 		trigs.push(new Sprite({pos:{x:rnd(),y:-2},hw:0.3,hh:0.3}))
 	Engine.messagebox.print("Press 'a' to stop or resume animation.")
