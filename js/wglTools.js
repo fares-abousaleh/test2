@@ -164,11 +164,12 @@ function addVertex(v,clr,tx){
 function createMainCanvas(w,h){
 	const can = document.createElement("canvas")
 	can.setAttribute("style",
-	`  margin:0;
+	`  margin:5;
+	display:block;
 		background:#111;
 	`)
 	document.body.appendChild(can)
-	can.width = Math.min(window.screen.width/2,512)
+	can.width = Math.min(window.screen.width-10,512)
 	can.height = can.width
 	return can
 }
@@ -196,8 +197,8 @@ function createMessageBox(w,h){
 			z-index: 1;
 			user-select: none;"
 	`)
-	messagebox.left = maincanvas.right + 5
-	messagebox.top =5
+	messagebox.top = maincanvas.bottom + 5
+	messagebox.left =5
 	return messagebox
 }	
 
@@ -250,6 +251,12 @@ maincanvas.onmouseup = function(e){
 maincanvas.onmousemove = function(e){
 	Mouse.x = e.x - maincanvas.getBoundingClientRect().x
 	Mouse.y = e.y - maincanvas.getBoundingClientRect().y
-	 
+	console.log(Mouse)
 }
 
+maincanvas.addEventListener("touchstart",(e)=>{
+	Mouse.x = e.touches[0].clientX - maincanvas.getBoundingClientRect().x
+	Mouse.y = e.touches[0].clientY - maincanvas.getBoundingClientRect().y
+	Mouse.state=e.touches.length>0
+	
+})
