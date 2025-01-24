@@ -1,25 +1,28 @@
-import Engine from "./wglTools.js"
+import { Engine , Mouse } from "./wglTools.js"
 import Sprite from "./sprites.js"
 
 var trianglesOn = true
 
 const sprites = [
+	new Sprite({pos:{x:rnd(),y:rnd()},txPos:{x:0.25,y:0.25,xx:0.5,yy:0.5}}),
 	new Sprite({pos:{x:0,y:0},hw:0.1,hh:0.1,color:[1,1,1,1],txPos:{x:0,y:0,xx:0.25,yy:0.25}}),
 	new Sprite({pos:{x:0.5,y:0.5},hw:0.1,hh:0.1,color:[1,1,1,1],txPos:{x:0,y:0.25,xx:0.25,yy:0.5}}),
 	new Sprite({pos:{x:rnd(),y:rnd()}}),
 	new Sprite({pos:{x:rnd(),y:rnd()}}),
 	new Sprite({pos:{x:rnd(),y:rnd()}}),
 	new Sprite({pos:{x:rnd(),y:rnd()}}),
-	new Sprite({pos:{x:rnd(),y:rnd()},txPos:{x:0.25,y:0.25,xx:0.5,yy:0.5}}),
+	new Sprite({pos:{x:rnd(),y:rnd()}}),
+	new Sprite({pos:{x:rnd(),y:rnd()}}),
+	new Sprite({pos:{x:rnd(),y:rnd()}}),
+	new Sprite({pos:{x:rnd(),y:rnd()}}),
+	new Sprite({pos:{x:rnd(),y:rnd()}}),
+	new Sprite({pos:{x:rnd(),y:rnd()}}),
+	new Sprite({pos:{x:rnd(),y:rnd()}}),
 	new Sprite({pos:{x:rnd(),y:rnd()},txPos:{x:0.25,y:0.0,xx:0.5,yy:0.25}}),
 	]
 
 const trigs = []
  
-document.body.onmousedown = function(){
-	Engine.togle()
-}
-
 document.body.onkeydown = function(e){
 	
 	switch(e.key){
@@ -76,9 +79,16 @@ function animate(t){
 					  }
 				}
 				  
-	for(let i=0;i<10;i++)
-		sprites[i%sprites.length].add({x:-0.16+(i%4)*0.16+0.1*Math.sin((i%5+1)*1.0*t),y:-0.14+(i%3)*0.13+0.1*Math.cos((i%7+1)*1.0*t)})
+	for(let i=1;i<sprites.length;i++)
+		sprites[i].add({x:-0.16+(i%4)*0.16+0.1*Math.sin((i%5+1)*1.0*t),y:-0.14+(i%3)*0.13+0.1*Math.cos((i%7+1)*1.0*t)})
 	
+	if(Mouse.state==1){
+		sprites[0].pos.x += dt*13*(Mouse.x*1.0/Engine.can.width - 0.5*(sprites[0].pos.x+1))
+		sprites[0].pos.x = sat(sprites[0].pos.x ,-1,1)
+		 
+	}
+	sprites[0].pos.y=-0.9+0.06*Math.sin(3*t)
+	sprites[0].add( )
 	if(rnd(0,100)<12)
 	{ 
 		Engine.messagebox.clear()
@@ -114,10 +124,7 @@ function animate1(t){
 }
 
 document.body.onload = function(){		
-	Engine.start(
-		window.screen.width-8,
-		window.screen.width-8
-		)
+	 
 	for(let i=0;i<20;i++)
 		trigs.push(new Sprite({pos:{x:rnd(),y:-2},hw:0.3,hh:0.3}))
 	Engine.messagebox.print("Press 'a' to stop or resume animation.")

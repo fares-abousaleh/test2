@@ -3,6 +3,7 @@ import {fragmentShader} from "./fragmentShader.js"
 
 import {vertexShader} from "./vertexShader.js"
 
+export {Engine,Mouse}
 const MAX_VERTEX_NUM = 10000
 
 var vNum = 0
@@ -163,17 +164,12 @@ function addVertex(v,clr,tx){
 function createMainCanvas(w,h){
 	const can = document.createElement("canvas")
 	can.setAttribute("style",
-	`
-			position:absolute;
-			left:4px;
-			top:4px;
-			margin:0;
-			
-			background:#303030;
+	`  margin:0;
+		background:#111;
 	`)
 	document.body.appendChild(can)
-	can.width = w
-	can.height = h
+	can.width = Math.min(window.screen.width/2,512)
+	can.height = can.width
 	return can
 }
 
@@ -193,23 +189,25 @@ function createMessageBox(w,h){
 	
 	messagebox.setAttribute("style",`
 			position:absolute;
-			left:10%;
-			top:10%;
 			curssor:pointer; 
 			text-align: left;
-			color: yellow;
+			margin:5px;
+			color: #ff2;
 			z-index: 1;
 			user-select: none;"
 	`)
-	
+	messagebox.left = maincanvas.right + 5
+	messagebox.top =5
 	return messagebox
 }	
 
 function start(w,h){
-	messagebox = createMessageBox(w,h)
 	maincanvas = createMainCanvas(w,h)
+	messagebox = createMessageBox(w,h)
+	
 	initGL(maincanvas,messagebox)
 	Engine.messagebox=messagebox
+	Engine.can=maincanvas
 }
 
 function togleAnim(){
@@ -225,11 +223,33 @@ const Engine = {
 		stop:stopAnim,
 		togle:togleAnim,
 		time:getTime,
-		start:start,
+		 
 		draw:drawAll,
 		addVertex:addVertex,
 		messagebox:messagebox,
-		animation:animation
+		animation:animation,
+		can:maincanvas
 		}
 
-export default Engine
+const Mouse = {x:undefined,y:undefined,state:undefined}
+ 
+start()
+
+maincanvas.onmousedown = function(e){
+	maincanvas.onmousemove(e)
+	Mouse.state = 1
+	
+}
+
+maincanvas.onmouseup = function(e){
+	maincanvas.onmousemove(e) 
+	Mouse.state = 0
+	 
+}
+
+maincanvas.onmousemove = function(e){
+	Mouse.x = e.x - maincanvas.getBoundingClientRect().x
+	Mouse.y = e.y - maincanvas.getBoundingClientRect().y
+	 
+}
+

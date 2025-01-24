@@ -1,5 +1,5 @@
 
-import Engine from "./wglTools.js"
+import {Engine} from "./wglTools.js"
 
 /*-------------------------------------------
 	Sprite Class  
