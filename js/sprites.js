@@ -55,3 +55,4 @@ export default class Sprite{
 		Engine.addVertex( [aa4,bb4] ,c, [txx,tyy] )
 	}
 }
+

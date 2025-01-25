@@ -50,3 +50,9 @@ function intersectRects(A,B){
 	          (B.y-B.h >= A.y+A.h)   // B / A  
     return !res			  
 }
+
+function dist(A,B){
+	const dx = A.x-B.x
+	const dy = A.y-B.y
+	return Math.pow(dx*dx+dy*dy,0.5)
+}

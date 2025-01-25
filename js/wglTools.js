@@ -12,8 +12,10 @@ var ctx ,prog, vbuf, cbuf, tbuf
 var messagebox = null
 var maincanvas = null
 var animation = {on:false,func:function(){}}
+ 
 
 function resumeAnim(f){
+	last_time=Date.now()
 	animation.on = true
 	animation.func = f || animation.func
 	requestAnimationFrame(f)
@@ -126,16 +128,26 @@ function copyArr(dest,pos,src){
 			dest[pos]=src[i]
 }
 
-//---------------------------------
-// ** drawAll
+
+
+var last_time = Date.now()
+var dtime=0, time = 0
+
 function getTime(){
 	return time
 }
 
-var time = 0
-const StartDate = Date.now()
+function getDTime(){
+    return dtime
+}
+
+//---------------------------------
+// ** drawAll
 function drawAll(){
-	time = (Date.now()-StartDate)*0.001
+	const cur_time = Date.now()
+	dtime = (cur_time-last_time)*0.001
+	time  += dtime
+	last_time = cur_time
 	setUnif("time",time)
 	setBuffer(vbuf,  vArr ) 
 	setBuffer(cbuf,  cArr ) 
@@ -165,12 +177,16 @@ function createMainCanvas(w,h){
 	const can = document.createElement("canvas")
 	can.setAttribute("style",
 	`  margin:5;
-	display:block;
+	    display:block;
+		width:512px;
+		height:512px;
 		background:#111;
+		padding:5px;
+		border: solid 1px #332; 
 	`)
 	document.body.appendChild(can)
-	can.width = Math.min(window.screen.width-10,512)
-	can.height = can.width
+	can.width  = 512;
+	can.height = 512;
 	return can
 }
 
@@ -192,13 +208,16 @@ function createMessageBox(w,h){
 			position:absolute;
 			curssor:pointer; 
 			text-align: left;
-			margin:5px;
-			color: #ff2;
+			margin:5 px;
+			border: solid 1px #332; 
+			padding:5px;
+			display:inline-block;
+			color: #885;
 			z-index: 1;
-			user-select: none;"
+			min-width:512px;
+			user-select: none;
+			font:consolas, 0.6em;"
 	`)
-	messagebox.top = maincanvas.bottom + 5
-	messagebox.left =5
 	return messagebox
 }	
 
@@ -224,7 +243,7 @@ const Engine = {
 		stop:stopAnim,
 		togle:togleAnim,
 		time:getTime,
-		 
+		dtime:getDTime, 
 		draw:drawAll,
 		addVertex:addVertex,
 		messagebox:messagebox,
@@ -249,14 +268,21 @@ maincanvas.onmouseup = function(e){
 }
 
 maincanvas.onmousemove = function(e){
-	Mouse.x = e.x - maincanvas.getBoundingClientRect().x
-	Mouse.y = e.y - maincanvas.getBoundingClientRect().y
-	console.log(Mouse)
+	const rec = maincanvas.getBoundingClientRect()
+	Mouse.x = -1.0+2.0*(e.x - rec.x)/rec.width
+	Mouse.y = +1.0-2.0*(e.y - rec.y)/rec.height
+	 
 }
 
 maincanvas.addEventListener("touchstart",(e)=>{
-	Mouse.x = e.touches[0].clientX - maincanvas.getBoundingClientRect().x
-	Mouse.y = e.touches[0].clientY - maincanvas.getBoundingClientRect().y
+	const rec = maincanvas.getBoundingClientRect()
+	Mouse.x = -1.0+2.0*(e.touches[0].clientX - rec.x)/rec.width
+	Mouse.y = +1.0-2.0*(e.touches[0].clientY - rec.y)/rec.height
 	Mouse.state=e.touches.length>0
-	
 })
+
+maincanvas.addEventListener("touchend",(e)=>{
+	Mouse.state=e.touches.length>0
+})
+
+
