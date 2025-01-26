@@ -52,14 +52,14 @@ function createMonster(){
 
 
 function createCloud(sp){
-	const w = rnd(0.6,1.)
+	const w = rnd(0.4,0.6)
 	sp = sp || new Sprite({})
 	sp.color=[rnd(0.5,1),rnd(0.5,1),rnd(0.5,1),rnd(0.1,0.3)]
 	sp.pos={x:rnd(),y:rnd( 3, 2)}
 	sp.txPos={x:0,y:0.5,xx:0.5,yy:1}
 	sp.hw=w
 	sp.hh=w
-	sp.rot=rnd(0.05)
+	sp.rot=rnd(3.14159)
 	return sp
 }
 
