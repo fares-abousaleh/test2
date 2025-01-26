@@ -6,6 +6,8 @@ var trianglesOn = true
 const sprites = [new Sprite({txPos:{x:0.5,y:0,xx:0.75,yy:0.25},hw:0.16,hh:0.16})]
 const trigs = []
 const missiles = []
+const fires = []
+
 
 function createMissile(){
 	return new Sprite({
@@ -15,14 +17,34 @@ function createMissile(){
 		hw:0.12,hh:0.16})
 }
 
+function createFire(sp){
+	const fr = new Sprite({
+		color:[1,1,1,1],
+		pos:{x:sp.pos.x,y:sp.pos.y},
+		txPos:{x:0.75,y:0,xx:1,yy:0.25},
+		hw:0.1,hh:0.1})
+	fr.rot = rnd(Math.PI)
+	return fr
+}
+
+function startFire(sp){
+	for(let i in fires)
+		if(fires[i].hw>1){
+			fires[i]= createFire(sp)
+			return
+		}
+	fires.push( createFire(sp) )		
+}
+
 function createMonster(){
 	const y = 0.25*rndInt(0,2)
+	const w = rnd(0.1,0.2)
 	const sp =  new Sprite({
 		color:[1,1,1,1],
 		pos:{x:rnd(),y:rnd()},
 		txPos:{x:0,y:y,xx:0.25,yy:y+0.25},
-		hw:0.1,hh:0.1})
-	sp.v={x:rnd(),y:rnd()}
+		hw:w,hh:w})
+	sp.v={x:rnd(0.1),y:rnd(-2,-1)}
 	return sp
 }
 
@@ -104,24 +126,36 @@ function animate(){
 					  }
 				}
 				  
-	for(let i=1;i<sprites.length;i++){
-		const dx = 0.1*Math.sin((i%5+1)*1.0*t)
-		const dy = 0.1*Math.cos((i%5+1)*1.0*t)
-		sprites[i].pos.x+=dx
-		sprites[i].pos.y+=dy
+	//-- animate enemies ----------------			  
+	for(let i=1;i<sprites.length;i++)
+	{
+		const sp = sprites[i]
+		//---collision with missile
+		if(sp.pos.y<1.1)
 		for(let j in missiles){
-			if(dist(missiles[j].pos,sprites[i].pos)<0.1451){
+			if(dist(missiles[j].pos,sp.pos)<0.1451){
+				startFire(sp)
 				missiles[j].pos.y=3
-				 sprites[i].pos.y=3
+				sp.pos.y=rnd(2,3)
+				sp.pos.x=rnd( )
+				sp.v.y=rnd(-1,-0.3)
+				sp.v.x=rnd(0.1)
+				break 
 			}
 		}
-		if(sprites[i].pos.y<1){
+		
 			sprites[i].add()
-			
-		sprites[i].pos.x-=dx+sprites[i].v.x*dt
-		sprites[i].pos.y-=dy+sprites[i].v.y*dt
-		sprites[i].v.x+=0.4*sprites[i].pos.x*dt
-		sprites[i].v.y+=0.4*sprites[i].pos.y*dt
+			sprites[i].pos.x+= sprites[i].v.x*dt
+			sprites[i].pos.y+= sprites[i].v.y*dt
+			 
+			sprites[i].pos.x=sat(sprites[i].pos.x,-1.1,1.1)
+			sprites[i].v.x +=rnd(0.01)*dt
+			sprites[i].v.y +=rnd(0.01)*dt
+			sprites[i].v.y  = sat(sprites[i].v.y,-1,-0.3)
+		
+		if(sprites[i].pos.y<-1.5){
+			sprites[i].pos.y=rnd(2,2.7)
+			sprites[i].pos.x=rnd( )
 		}
 	}
 	
@@ -146,7 +180,19 @@ function animate(){
 		}
 	}
 	
-	sprites[0].add( {x:0,y:0.16*Math.sin(3*t)})
+	for(let i in fires ) 
+	{
+		if(fires[i].hw<1){
+			fires[i].add(undefined,fires[i].rot+=rnd()*0.1 )
+			fires[i].hw+=dt*6 
+			fires[i].hh+=dt*6 
+			fires[i].color[3]*=0.7
+			fires[i].color[1]*=0.7
+			fires[i].color[2]*=0.9
+		}
+	}
+	
+	sprites[0].add( {x:0.06*Math.sin(4*t),y:0.06*Math.sin(3*t)})
 	
 	
 	
@@ -158,6 +204,8 @@ function animate(){
 		Engine.messagebox.print("press (a) to togle animation")
 		Engine.messagebox.print("press (1) or (2) to chose type of animation")
 		Engine.messagebox.print("press (t) to hide or show background objects")
+		Engine.messagebox.print("fires:"+fires.length)
+		Engine.messagebox.print("enemies:"+sprites.length)
 		
 	}
 	Engine.draw()
