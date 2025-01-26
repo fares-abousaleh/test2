@@ -159,11 +159,13 @@ function animate(){
 			sp.pos.x+= sp.v.x*dt
 			sp.pos.y+= sp.v.y*dt
 			 
-			sp.pos.x=sat(sp.pos.x,-1.1,1.1)
-			sp.v.x +=rnd(0.01)*dt
-			sp.v.y +=rnd(0.01)*dt
+			sp.pos.x=sat(sp.pos.x,-0.95,0.95)
+			if(rnd()>0 ){
+				sp.v.x -= Math.sign(sp.pos.x)*rnd(3 ,10)*dt
+				sp.v.y += rnd(33)*dt
+			}
 			sp.v.y  = sat(sp.v.y,-1,-0.3)
-		
+			
 		if(sp.pos.y<-1.5){
 			sp.pos.y=rnd(2,2.7)
 			sp.pos.x=rnd( )
