@@ -183,13 +183,15 @@ function addVertex(v,clr,tx){
 function createMainCanvas(w,h){
 	const can = document.createElement("canvas")
 	can.setAttribute("style",
-	`  margin:5;
-	    display:block;
+	`  margin:0;
+	    position:absolute;
 		width:512px;
 		height:512px;
 		background:#111;
 		padding:5px;
-		border: solid 1px #332; 
+		border: solid 1px #332;
+		left:5px;
+		top:5px;
 	`)
 	document.body.appendChild(can)
 	can.width  = 512;
@@ -209,22 +211,28 @@ function createMessageBox(w,h){
 		messagebox.innerHTML = ""
 	}
 	
-	document.body.appendChild(messagebox)
 	
+	
+	let lf = 5, tp = 20 + maincanvas.height
+	if(window.screen.width>window.screen.height){
+		lf = 20 + maincanvas.width
+		tp  = 5
+	}
 	messagebox.setAttribute("style",`
 			position:absolute;
 			curssor:pointer; 
-			text-align: left;
-			margin:5 px;
+			margin:0 px;
 			border: solid 1px #332; 
 			padding:5px;
-			display:inline-block;
 			color: #885;
 			z-index: 1;
 			min-width:512px;
 			user-select: none;
-			font:consolas, 0.6em;"
+			font:consolas, 0.6em;
+			top:`+tp+`px;
+			left:`+lf+`px;
 	`)
+	document.body.appendChild(messagebox)	
 	return messagebox
 }	
 
