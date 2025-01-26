@@ -12,7 +12,7 @@ var ctx ,prog, vbuf, cbuf, tbuf
 var messagebox = null
 var maincanvas = null
 var animation = {on:false,func:function(){}}
- 
+var isReady = false
 
 function resumeAnim(f){
 	last_time=Date.now()
@@ -87,6 +87,7 @@ function initGL(can,messagebox){
 	var img = new Image(512,512);
 	img.onload = function(){
 		newTex(img)
+		isReady = true
 	}
 	img.src = './assets/bk.png'
 	
@@ -148,14 +149,16 @@ function drawAll(){
 	dtime = (cur_time-last_time)*0.001
 	time  += dtime
 	last_time = cur_time
-	setUnif("time",time)
-	setBuffer(vbuf,  vArr ) 
-	setBuffer(cbuf,  cArr ) 
-	setBuffer(tbuf,  tArr )
-	ctx.drawArrays(ctx.TRIANGLES,0,vNum);	 
+	if(isReady){
+		setUnif("time",time)
+		setBuffer(vbuf,  vArr ) 
+		setBuffer(cbuf,  cArr ) 
+		setBuffer(tbuf,  tArr )
+		ctx.drawArrays(ctx.TRIANGLES,0,vNum);	 
+	}
 	vNum=0
 	if(animation.on)
-		resumeAnim(animation.func)
+		requestAnimationFrame(animation.func)
 }
 
 function addVertex(v,clr,tx){
