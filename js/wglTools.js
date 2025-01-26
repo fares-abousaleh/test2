@@ -264,10 +264,11 @@ const Engine = {
 		messagebox:messagebox,
 		animation:animation,
 		can:maincanvas,
+		stopMusic:stopMusic,
 		sounds:[ 
-		new Audio('./assets/dg.mp3'),
-		new Audio('./assets/sad.mp3'),
-		new Audio('./assets/happy.mp3'),
+		new Audio('./assets/dg.mp3') ,
+		new Audio('./assets/sad.mp3') ,
+		new Audio('./assets/happy.mp3') ,
 		 
 		]
 		}
@@ -306,7 +307,10 @@ maincanvas.addEventListener("touchend",(e)=>{
 	Mouse.state=e.touches.length>0
 })
 
- 
+function stopMusic(){
+	for(let i in Engine.sounds)
+		Engine.sounds[i].pause()
+} 
 
 		
 		

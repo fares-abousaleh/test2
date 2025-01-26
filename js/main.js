@@ -93,6 +93,11 @@ document.body.onkeydown = function(e){
 				 
 		case 'a':
                   Engine.togle()
+				  if(!Engine.animation.on)
+				  {
+					  playing=false
+					  Engine.stopMusic()
+				  }
 				  break	
 		case 'r': 
                   for(let i=1;i<10;i++)
@@ -268,7 +273,7 @@ document.body.onload = function(){
 var playing = false
 
 document.body.addEventListener("mousedown",()=>{
-	if(playing|| Engine.sounds==undefined||Engine.sounds[2]==undefined)return
+	if(!Engine.animation.on||playing|| Engine.sounds==undefined||Engine.sounds[2]==undefined)return
 	console.log('start song');
 	playing=true
 	Engine.sounds[2].play()
