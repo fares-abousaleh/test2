@@ -111,7 +111,7 @@ document.body.onkeydown = function(e){
 function missile_fire(){
 	if(missile_count>0){
 					//missile_count--
-					 
+					if(Engine.sounds[0])Engine.sounds[0].play() 
 					for(let i in missiles)
 						if(missiles[i].pos.y>=2){
 							missiles[i].pos.x=sprites[0].pos.x
@@ -189,6 +189,7 @@ function animate(){
 		{
 			Mouse.state=0
 			missile_fire()
+			
 		}
 	}
 		
@@ -257,10 +258,19 @@ function animate1(){
 }
 
 document.body.onload = function(){		
-	 
 	Engine.messagebox.print("Press 'a' to stop or resume animation.")
 	Engine.messagebox.print("Press 't' to show or hide triangles.")
 	Engine.messagebox.print("Press 'Escape' to erase text.")
 	
 	Engine.resume(animate)
 }
+
+var playing = false
+
+document.body.addEventListener("mousedown",()=>{
+	if(playing|| Engine.sounds==undefined||Engine.sounds[2]==undefined)return
+	console.log('start song');
+	playing=true
+	Engine.sounds[2].play()
+	Engine.sounds[2].addEventListener("ended",()=>{playing=false}, true)
+})

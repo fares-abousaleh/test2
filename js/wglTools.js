@@ -300,4 +300,12 @@ maincanvas.addEventListener("touchend",(e)=>{
 	Mouse.state=e.touches.length>0
 })
 
+Engine.sounds = [ 
+		new Audio('../assets/dg.mp3'),
+		new Audio('../assets/sad.mp3'),
+		new Audio('../assets/happy.mp3'),
+		 
+		]
 
+		
+		
