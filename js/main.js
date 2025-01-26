@@ -4,7 +4,8 @@ import Sprite from "./sprites.js"
 var trianglesOn = true
 
 const sprites = [new Sprite({txPos:{x:0.5,y:0,xx:0.75,yy:0.25},hw:0.16,hh:0.16})]
-const trigs = []
+sprites[0].v={x:0,y:0}
+const clouds = []
 const missiles = []
 const fires = []
 
@@ -38,24 +39,41 @@ function startFire(sp){
 
 function createMonster(){
 	const y = 0.25*rndInt(0,2)
-	const w = rnd(0.1,0.2)
+	const w = rnd(0.07,0.16)
 	const sp =  new Sprite({
 		color:[1,1,1,1],
 		pos:{x:rnd(),y:rnd()},
 		txPos:{x:0,y:y,xx:0.25,yy:y+0.25},
 		hw:w,hh:w})
 	sp.v={x:rnd(0.1),y:rnd(-2,-1)}
+	sp.rot=rnd(0.05)
+	return sp
+}
+
+
+function createCloud(sp){
+	const w = rnd(0.6,1.)
+	sp = sp || new Sprite({})
+	sp.color=[rnd(0.5,1),rnd(0.5,1),rnd(0.5,1),rnd(0.1,0.3)]
+	sp.pos={x:rnd(),y:rnd( 3, 2)}
+	sp.txPos={x:0,y:0.5,xx:0.5,yy:1}
+	sp.hw=w
+	sp.hh=w
+	sp.rot=rnd(0.05)
 	return sp
 }
 
 for(let i=0;i<10;i++)
-	missiles[i]=createMissile()
+	missiles[i] = createMissile()
 
 for(let i=1;i<10;i++)
 	sprites[i]=createMonster()
 
 var missile_count = 3
 
+for(let i=0;i<10;i++)
+		clouds[i] = createCloud()
+	
 document.body.onkeydown = function(e){
 	
 	switch(e.key){
@@ -111,18 +129,11 @@ function animate(){
 	  
 	//--- draw random triangles
 	if(trianglesOn)
-	for(let i in trigs){
-					  trigs[i].add({x:0,y:0}, t*(2+i*0.1))
-					  trigs[i].pos.y -= dt*(1+0.053*i)
-					  if(trigs[i].pos.y<-2){
-						  const x = rndInt(0,3)*0.25 
-						  const y = rndInt(0,3)*0.25 
-						  trigs[i].hw = rnd(0.3,0.6)
-						  trigs[i].hh = rnd(0.3,0.6)
-						  trigs[i].txPos={x:x,y:y,xx:x+0.25,yy:y+0.25}
-						  trigs[i].color=[rnd(0.5,1),rnd(0.5,1),rnd(0.5,1),rnd(0.05,0.31)]
-						  trigs[i].pos.y=rnd(1.5,3.5) 
-						  trigs[i].pos.x=rnd() 
+	for(let i in clouds){
+					  clouds[i].add({x:0,y:0}, t*(0.1+i*0.01))
+					  clouds[i].pos.y -= dt*(1+0.053*i)
+					  if(clouds[i].pos.y<-1-clouds[i].hh){
+				        createCloud(clouds[i])		   
 					  }
 				}
 				  
@@ -144,32 +155,39 @@ function animate(){
 			}
 		}
 		
-			sprites[i].add()
-			sprites[i].pos.x+= sprites[i].v.x*dt
-			sprites[i].pos.y+= sprites[i].v.y*dt
+			sp.add(undefined,sp.rot+=rnd(0.1)*dt)
+			sp.pos.x+= sp.v.x*dt
+			sp.pos.y+= sp.v.y*dt
 			 
-			sprites[i].pos.x=sat(sprites[i].pos.x,-1.1,1.1)
-			sprites[i].v.x +=rnd(0.01)*dt
-			sprites[i].v.y +=rnd(0.01)*dt
-			sprites[i].v.y  = sat(sprites[i].v.y,-1,-0.3)
+			sp.pos.x=sat(sp.pos.x,-1.1,1.1)
+			sp.v.x +=rnd(0.01)*dt
+			sp.v.y +=rnd(0.01)*dt
+			sp.v.y  = sat(sp.v.y,-1,-0.3)
 		
-		if(sprites[i].pos.y<-1.5){
-			sprites[i].pos.y=rnd(2,2.7)
-			sprites[i].pos.x=rnd( )
+		if(sp.pos.y<-1.5){
+			sp.pos.y=rnd(2,2.7)
+			sp.pos.x=rnd( )
 		}
 	}
 	
-	if(Mouse.state==1)
-	if(dist(sprites[0].pos,Mouse)>0.05)
+	//if(Mouse.state==1)
 	{
-		sprites[0].pos.x += dt*13*(Mouse.x - sprites[0].pos.x)
-		sprites[0].pos.y += dt*13*(Mouse.y - sprites[0].pos.y)
-		sprites[0].pos.x = sat(sprites[0].pos.x ,-1,1)
-		sprites[0].pos.y = sat(sprites[0].pos.y ,-1,1)
-	}		
-	else {
-		Mouse.state=0
-		missile_fire()
+		const d = dist(sprites[0].pos,Mouse)
+		if(d>0.05)
+		{
+			sprites[0].v.x = dt*513*(Mouse.x - sprites[0].pos.x)
+			sprites[0].v.y = dt*513*(Mouse.y - sprites[0].pos.y)
+			sprites[0].pos.x += dt*sprites[0].v.x
+			sprites[0].pos.y += dt*sprites[0].v.y
+			sprites[0].pos.x = sat(sprites[0].pos.x ,-1,1)
+			sprites[0].pos.y = sat(sprites[0].pos.y ,-1,1)
+		}		
+		else
+		if(Mouse.state>0) // triger missile		
+		{
+			Mouse.state=0
+			missile_fire()
+		}
 	}
 		
 	for(let i in missiles){
@@ -238,8 +256,6 @@ function animate1(){
 
 document.body.onload = function(){		
 	 
-	for(let i=0;i<20;i++)
-		trigs.push(new Sprite({pos:{x:rnd(),y:-2},hw:0.3,hh:0.3}))
 	Engine.messagebox.print("Press 'a' to stop or resume animation.")
 	Engine.messagebox.print("Press 't' to show or hide triangles.")
 	Engine.messagebox.print("Press 'Escape' to erase text.")
