@@ -71,7 +71,7 @@ for(let i=1;i<10;i++)
 
 var missile_count = 3
 
-for(let i=0;i<10;i++)
+for(let i=0;i<30;i++)
 		clouds[i] = createCloud()
 	
 document.body.onkeydown = function(e){
