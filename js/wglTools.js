@@ -263,7 +263,13 @@ const Engine = {
 		addVertex:addVertex,
 		messagebox:messagebox,
 		animation:animation,
-		can:maincanvas
+		can:maincanvas,
+		sounds:[ 
+		new Audio('../assets/dg.mp3'),
+		new Audio('../assets/sad.mp3'),
+		new Audio('../assets/happy.mp3'),
+		 
+		]
 		}
 
 const Mouse = {x:undefined,y:undefined,state:undefined}
@@ -300,12 +306,7 @@ maincanvas.addEventListener("touchend",(e)=>{
 	Mouse.state=e.touches.length>0
 })
 
-Engine.sounds = [ 
-		new Audio('../assets/dg.mp3'),
-		new Audio('../assets/sad.mp3'),
-		new Audio('../assets/happy.mp3'),
-		 
-		]
+ 
 
 		
 		
