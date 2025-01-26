@@ -52,7 +52,7 @@ function createMonster(){
 
 
 function createCloud(sp){
-	const w = rnd(0.9,1.4)
+	const w = rnd(1.2,2.4)
 	sp = sp || new Sprite({})
 	sp.color=[rnd(0.5,1),rnd(0.5,1),rnd(0.5,1),rnd(0.1,0.3)]
 	sp.pos={x:rnd(),y:rnd( 3, 2)}
@@ -71,7 +71,7 @@ for(let i=1;i<10;i++)
 
 var missile_count = 3
 
-for(let i=0;i<30;i++)
+for(let i=0;i<10;i++)
 		clouds[i] = createCloud()
 	
 document.body.onkeydown = function(e){
