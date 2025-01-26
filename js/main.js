@@ -116,7 +116,7 @@ document.body.onkeydown = function(e){
 function missile_fire(){
 	if(missile_count>0){
 					//missile_count--
-					if(Engine.sounds[0])Engine.sounds[0].play() 
+					if(Engine.sounds[3])Engine.sounds[3].play() 
 					for(let i in missiles)
 						if(missiles[i].pos.y>=2){
 							missiles[i].pos.x=sprites[0].pos.x
@@ -156,6 +156,7 @@ function animate(){
 				sp.pos.x=rnd( )
 				sp.v.y=rnd(-1,-0.3)
 				sp.v.x=rnd(0.1)
+				if(Engine.sounds[0])Engine.sounds[0].play() 
 				break 
 			}
 		}

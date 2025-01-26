@@ -269,6 +269,7 @@ const Engine = {
 		new Audio('./assets/dg.mp3') ,
 		new Audio('./assets/sad.mp3') ,
 		new Audio('./assets/happy.mp3') ,
+		new Audio('./assets/piu.mp3')
 		 
 		]
 		}
