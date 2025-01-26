@@ -265,9 +265,9 @@ const Engine = {
 		animation:animation,
 		can:maincanvas,
 		sounds:[ 
-		new Audio('../assets/dg.mp3'),
-		new Audio('../assets/sad.mp3'),
-		new Audio('../assets/happy.mp3'),
+		new Audio('./assets/dg.mp3'),
+		new Audio('./assets/sad.mp3'),
+		new Audio('./assets/happy.mp3'),
 		 
 		]
 		}
