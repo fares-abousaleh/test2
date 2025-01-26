@@ -155,6 +155,10 @@ function drawAll(){
 		setBuffer(cbuf,  cArr ) 
 		setBuffer(tbuf,  tArr )
 		ctx.drawArrays(ctx.TRIANGLES,0,vNum);	 
+	}else {
+		// alert("waiting for images...")
+		messagebox.clear()
+		messagebox.print("waiting for images to load...")
 	}
 	vNum=0
 	if(animation.on)
