@@ -306,11 +306,21 @@ maincanvas.addEventListener("touchstart",(e)=>{
 maincanvas.addEventListener("touchend",(e)=>{
 	Mouse.state=e.touches.length>0
 })
+function playMusic(k){
 
+if(!Engine.sounds||!Engine.sounds[k]) return 
+
+Engine.sounds[k].play()
+
+	
+}
 function stopMusic(){
 	for(let i in Engine.sounds)
-		Engine.sounds[i].pause()
-} 
+		{
+			
+			Engine.sounds[i].pause()
+			Engine.sounds[i]. currentTime=0
+} }
 
 		
 		
