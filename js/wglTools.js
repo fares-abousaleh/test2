@@ -266,12 +266,11 @@ const Engine = {
 		can:maincanvas,
 		stopMusic:stopMusic,
 		sounds:[ 
-		new Audio('./assets/dg.mp3') ,
-		new Audio('./assets/sad.mp3') ,
-		new Audio('./assets/happy.mp3') ,
-		new Audio('./assets/piu.mp3')
-		 
-		]
+			new Audio('./assets/dg.mp3') ,
+			new Audio('./assets/sad.mp3') ,
+			new Audio('./assets/happy.mp3') ,
+			new Audio('./assets/piu.mp3')
+		   ]
 		}
 
 const Mouse = {x:undefined,y:undefined,state:undefined}

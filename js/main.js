@@ -100,8 +100,11 @@ document.body.onkeydown = function(e){
 				  }
 				  break	
 		case 'r': 
-                  for(let i=1;i<10;i++)
+                  Engine.stopMusic()
+				  playing=true
+				  for(let i=1;i<10;i++)
 					sprites[i]=createMonster()
+				  sprites[0].pos.y=-0.9
 				  break
 		case 'm':		
                   missile_fire()				  
@@ -178,7 +181,7 @@ function animate(){
 		}
 	}
 	
-	//if(Mouse.state==1)
+	if(sprites[0].pos.y<2)
 	{
 		const d = dist(sprites[0].pos,Mouse)
 		if(d>0.05)
@@ -197,8 +200,18 @@ function animate(){
 			missile_fire()
 			
 		}
+		//--- collisions with monsters	
+		for(let j=1;j<sprites.length;j++){
+		   if(dist(sprites[0].pos,sprites[j].pos)<0.1){
+		      startFire(sprites[0])
+			  Engine.stopMusic()
+			  if(Engine.sounds[1])Engine.sounds[1].play()
+			  sprites[0].pos.y=3
+			  break
+		   }
+		}
 	}
-		
+	
 	for(let i in missiles){
 		if(missiles[i].pos.y<2){
 			missiles[i].pos.y+=3*dt
