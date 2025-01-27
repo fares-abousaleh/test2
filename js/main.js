@@ -206,7 +206,7 @@ function animate(){
 		      startFire(sprites[0])
 			  Engine.stopMusic()
 			  if(Engine.sounds[1])Engine.sounds[1].play()
-			  sprites[0].pos.y=3
+			  //sprites[0].pos.y=3
 			  break
 		   }
 		}
