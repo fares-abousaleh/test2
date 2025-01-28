@@ -91,20 +91,19 @@ document.body.onkeydown = function(e){
 		case 't': trianglesOn = !trianglesOn
 				  break
 				 
-		case 'a':
+		case 'a': Engine.stopSound()
                   Engine.togle()
-				  if(!Engine.animation.on)
-				  {
-					  //playing=false
-					  Engine.stopMusic()
+				  if(Engine.animation.on){
+				  Engine.playMusic()
+				  }
+				  else{
+				  Engine.stopMusic()
 				  }
 				  break	
 		case 'r': 
-                  Engine.stopMusic()
-				  //playing=true
-				  // for(let i=1;i<10;i++)
-					// sprites[i]=createMonster()
 				  sprites[0].pos.y=-0.9
+				  Engine.stopSound()
+				  Engine.playMusic()
 				  break
 		case 'm':		
                   missile_fire()				  
@@ -119,7 +118,7 @@ document.body.onkeydown = function(e){
 function missile_fire(){
 	if(missile_count>0){
 					//missile_count--
-					Engine.playMusic('piu') 
+					Engine.playSound('piu') 
 					for(let i in missiles)
 						if(missiles[i].pos.y>=2){
 							missiles[i].pos.x=sprites[0].pos.x
@@ -159,7 +158,7 @@ function animate(){
 				sp.pos.x=rnd( )
 				sp.v.y=rnd(-1,-0.3)
 				sp.v.x=rnd(0.1)
-				Engine.playMusic('dg') 
+				Engine.playSound('dg') 
 				break 
 			}
 		}
@@ -205,7 +204,7 @@ function animate(){
 		   if(dist(sprites[0].pos,sprites[j].pos)<0.1){
 		      startFire(sprites[0])
 			  Engine.stopMusic()
-			  Engine.playMusic('sad')
+			  Engine.playSound('sad')
 			  sprites[0].pos.y=3
 			  break
 		   }
@@ -248,6 +247,7 @@ function animate(){
 		Engine.messagebox.print("enemies:"+sprites.length)
 		
 	}
+	if(sprites[0].pos.y<2)Engine.playMusic()
 	Engine.draw()
 	
 }
@@ -280,7 +280,8 @@ document.body.onload = function(){
 	Engine.messagebox.print("Press 'a' to stop or resume animation.")
 	Engine.messagebox.print("Press 't' to show or hide triangles.")
 	Engine.messagebox.print("Press 'Escape' to erase text.")
-	
+	Engine.addMusic(['happy','fast'])
+	Engine.addSound(['piu','dg','sad'])
 	Engine.resume(animate)
 }
 
@@ -289,9 +290,5 @@ document.body.addEventListener("mousedown",() => {
 		document.body.onkeydown({key:'r'})
 		return
 	}
-	if(!Engine.animation.on|| Engine.sounds==undefined)return
-	const song = rndChoice(['happy','fast'])
-	console.log(song)
-	if(Engine.sounds['happy'].paused&& Engine.sounds['fast'].paused)
-		Engine.playMusic(song)	
+	 	
 } )

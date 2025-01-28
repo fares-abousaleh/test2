@@ -1,3 +1,4 @@
+const CAN_SIZE = 650
 
 import {fragmentShader} from "./fragmentShader.js"
 
@@ -185,8 +186,8 @@ function createMainCanvas(w,h){
 	can.setAttribute("style",
 	`  margin:0;
 	    position:absolute;
-		width:512px;
-		height:512px;
+		width:`+CAN_SIZE+`px;
+		height:`+CAN_SIZE+`px;
 		background:#111;
 		padding:5px;
 		border: solid 1px #332;
@@ -194,8 +195,8 @@ function createMainCanvas(w,h){
 		top:5px;
 	`)
 	document.body.appendChild(can)
-	can.width  = 512;
-	can.height = 512;
+	can.width  = CAN_SIZE;
+	can.height = CAN_SIZE;
 	return can
 }
 
@@ -265,15 +266,29 @@ const Engine = {
 		animation:animation,
 		can:maincanvas,
 		stopMusic:stopMusic,
+		stopSound:stopSound,
 		playMusic:playMusic,
-		sounds:{ 
-			dg:new Audio('./assets/dg.mp3') ,
-			sad:new Audio('./assets/sad.mp3') ,
-			happy:new Audio('./assets/happy.mp3') ,
-			piu:new Audio('./assets/piu.mp3'),
-			fast:new Audio('./assets/fast.mp3')
-		    }
+		playSound:playSound,
+		sounds:{ },
+		music:{ },
+		addMusic:addMusic,
+		addSound:addSound,
 		}
+
+const music_names=[]
+
+function addMusic(m){
+	for(let i in m){
+		music_names.push(m[i])
+		Engine.music[m[i]]=new Audio('./assets/'+m[i]+".mp3")
+	}
+}
+
+function addSound(m){
+	for(let i in m){
+		Engine.sounds[m[i]]=new Audio('./assets/'+m[i]+".mp3")
+	}
+}
 
 const Mouse = {x:undefined,y:undefined,state:undefined}
  
@@ -310,7 +325,14 @@ maincanvas.addEventListener("touchend",(e)=>{
 })
 
 function stopMusic(){
-	if(Engine&&Engine.sounds)
+	for(let i in Engine.music)
+	{
+		Engine.music[i].pause()
+		Engine.music[i].currentTime = 0
+	}
+} 
+
+function stopSound(){
 	for(let i in Engine.sounds)
 	{
 		Engine.sounds[i].pause()
@@ -318,10 +340,17 @@ function stopMusic(){
 	}
 } 
 
-function playMusic(name){
-	if(Engine&&Engine.sounds&&Engine.sounds[name])
-		Engine.sounds[name].play()
+function playMusic(){
+	for(let m in Engine.music)
+		if(Engine.music[m]&&!Engine.music[m].paused)return
+	const sng = rndChoice(music_names)
+	if(Engine.music[sng])
+		Engine.music[sng].play()
 }
 
-		
+function playSound(m){
+	 
+	if(Engine.sounds[m])
+	Engine.sounds[m].play()
+}
 		
