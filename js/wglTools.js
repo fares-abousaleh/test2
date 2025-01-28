@@ -12,6 +12,7 @@ var vNum = 0
 var ctx ,prog, vbuf, cbuf, tbuf
 var messagebox = null
 var maincanvas = null
+var alertBox = null
 var animation = {on:false,func:function(){}}
 var isReady = false
 
@@ -223,13 +224,14 @@ function createMessageBox(w,h){
 			position:absolute;
 			curssor:pointer; 
 			margin:0 px;
-			border: solid 1px #332; 
+			border: solid 1px #775; 
 			padding:5px;
 			color: #885;
 			z-index: 1;
 			min-width:512px;
 			user-select: none;
-			font:consolas, 0.6em;
+			font:consolas;
+			font-size: 1.6em;
 			top:`+tp+`px;
 			left:`+lf+`px;
 	`)
@@ -237,13 +239,49 @@ function createMessageBox(w,h){
 	return messagebox
 }	
 
-function start(w,h){
-	maincanvas = createMainCanvas(w,h)
-	messagebox = createMessageBox(w,h)
+function createAlertBox(){
 	
+	let alertBox = document.createElement("span")	
+	
+	alertBox.print = function(s){
+		alertBox.innerHTML += ""+s+"<br>"
+	}
+	
+	alertBox.clear = function(){
+		alertBox.innerHTML = ""
+	}
+	
+	const x = CAN_SIZE / 8
+	const y = 4 * CAN_SIZE / 9
+	const w = 3 * CAN_SIZE / 4
+	alertBox.setAttribute("style",`
+			position:absolute;
+			curssor:pointer; 
+			margin:0 px; 
+			padding:5px;
+			color: #ffa;
+			z-index: 1;
+			min-width:512px;
+			user-select: none;
+			font:consolas;
+			font-size:2em;
+			top:`+x+`px;
+			left:`+x+`px;
+			width:`+w+`;
+			height:`+w+`;
+	`)
+	document.body.appendChild(alertBox)	
+	return alertBox
+}	
+
+function start(w,h){
+	maincanvas = createMainCanvas()
+	messagebox = createMessageBox()
+	alertBox = createAlertBox()
 	initGL(maincanvas,messagebox)
 	Engine.messagebox=messagebox
 	Engine.can=maincanvas
+	Engine.alertBox=alertBox
 }
 
 function togleAnim(){
@@ -273,6 +311,7 @@ const Engine = {
 		music:{ },
 		addMusic:addMusic,
 		addSound:addSound,
+		alertBox:alertBox
 		}
 
 const music_names=[]

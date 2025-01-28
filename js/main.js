@@ -8,7 +8,8 @@ sprites[0].v={x:0,y:0}
 const clouds = []
 const missiles = []
 const fires = []
-
+var score_hit = 0
+var score_missed = 0
 
 function createMissile(){
 	return new Sprite({
@@ -94,16 +95,20 @@ document.body.onkeydown = function(e){
 		case 'a': Engine.stopSound()
                   Engine.togle()
 				  if(Engine.animation.on){
-				  Engine.playMusic()
+					Engine.playMusic()
 				  }
 				  else{
-				  Engine.stopMusic()
+					  Engine.stopMusic()
+					  Engine.stopSound()
 				  }
 				  break	
 		case 'r': 
 				  sprites[0].pos.y=-0.9
 				  Engine.stopSound()
 				  Engine.playMusic()
+				  Engine.alertBox.clear()
+				  score_hit = 0
+			      score_missed = 0
 				  break
 		case 'm':		
                   missile_fire()				  
@@ -159,11 +164,12 @@ function animate(){
 				sp.v.y=rnd(-1,-0.3)
 				sp.v.x=rnd(0.1)
 				Engine.playSound('dg') 
+				score_hit+=1
 				break 
 			}
 		}
 		
-			sp.add(undefined,sp.rot+=rnd(0.1)*dt)
+			sp.add(undefined,sp.rot+=i*rnd( 1, 2)*dt)
 			sp.pos.x+= sp.v.x*dt
 			sp.pos.y+= sp.v.y*dt
 			 
@@ -177,6 +183,7 @@ function animate(){
 		if(sp.pos.y<-1.5){
 			sp.pos.y=rnd(2,2.7)
 			sp.pos.x=rnd( )
+			if(sprites[0].pos.y<2)score_missed+=1
 		}
 	}
 	
@@ -205,6 +212,9 @@ function animate(){
 		      startFire(sprites[0])
 			  Engine.stopMusic()
 			  Engine.playSound('sad')
+			  Engine.alertBox.print('Game Over')
+			   
+			  Engine.alertBox.print('click to resume')
 			  sprites[0].pos.y=3
 			  break
 		   }
@@ -238,16 +248,14 @@ function animate(){
 	if(rnd(0,100)<12)
 	{ 
 		Engine.messagebox.clear()
+		Engine.messagebox.print('score:'+Math.round(score_hit*100.0/(score_hit+score_missed+1.0))+'%')
 		Engine.messagebox.print("fps:"+Math.round(1.0/dt))
-		//Engine.messagebox.print("dt ="+Math.round(dt*1000.0)+"ms" )
 		Engine.messagebox.print("press (a) to togle animation")
 		Engine.messagebox.print("press (m) or (mouse) to fire")
-		//Engine.messagebox.print("press (t) to hide or show background objects")
-		// Engine.messagebox.print("fires:"+fires.length)
-		// Engine.messagebox.print("enemies:"+sprites.length)
-		
 	}
-	if(sprites[0].pos.y<2)Engine.playMusic()
+	
+	
+	if(Engine.animation.on&&sprites[0].pos.y<2)Engine.playMusic()
 	Engine.draw()
 	
 }
