@@ -270,7 +270,8 @@ const Engine = {
 			dg:new Audio('./assets/dg.mp3') ,
 			sad:new Audio('./assets/sad.mp3') ,
 			happy:new Audio('./assets/happy.mp3') ,
-			piu:new Audio('./assets/piu.mp3')
+			piu:new Audio('./assets/piu.mp3'),
+			fast:new Audio('./assets/fast.mp3')
 		    }
 		}
 

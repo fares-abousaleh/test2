@@ -2,8 +2,8 @@ import { Engine , Mouse } from "./wglTools.js"
 import Sprite from "./sprites.js"
 
 var trianglesOn = true
-
-const sprites = [new Sprite({txPos:{x:0.5,y:0,xx:0.75,yy:0.25},hw:0.16,hh:0.16})]
+const SZ = 0.095
+const sprites = [new Sprite({txPos:{x:0.5,y:0,xx:0.75,yy:0.25},hw:SZ,hh:SZ})]
 sprites[0].v={x:0,y:0}
 const clouds = []
 const missiles = []
@@ -15,7 +15,7 @@ function createMissile(){
 		color:[1,1,1,1],
 		pos:{x:0,y:2},
 		txPos:{x:0.5,y:0.25,xx:0.75,yy:0.5},
-		hw:0.12,hh:0.16})
+		hw:0.1,hh:0.06})
 }
 
 function createFire(sp){
@@ -23,7 +23,7 @@ function createFire(sp){
 		color:[1,1,1,1],
 		pos:{x:sp.pos.x,y:sp.pos.y},
 		txPos:{x:0.75,y:0,xx:1,yy:0.25},
-		hw:0.1,hh:0.1})
+		hw:SZ,hh:SZ})
 	fr.rot = rnd(Math.PI)
 	return fr
 }
@@ -39,7 +39,7 @@ function startFire(sp){
 
 function createMonster(){
 	const y = 0.25*rndInt(0,2)
-	const w = rnd(0.07,0.16)
+	const w = rnd(0.5*SZ,SZ)
 	const sp =  new Sprite({
 		color:[1,1,1,1],
 		pos:{x:rnd(),y:rnd()},
@@ -284,15 +284,14 @@ document.body.onload = function(){
 	Engine.resume(animate)
 }
 
-//var playing = false
-
-document.body.addEventListener("mousedown",()=>{
+document.body.addEventListener("mousedown",() => {
 	if(sprites[0].pos.y>2){
 		document.body.onkeydown({key:'r'})
 		return
 	}
-	if(!Engine.animation.on|| Engine.sounds==undefined||Engine.sounds['happy']==undefined||!Engine.sounds['happy'].paused)return
-	console.log('start song');
-	//playing=true
-	Engine.playMusic('happy')	
-})
+	if(!Engine.animation.on|| Engine.sounds==undefined)return
+	const song = rndChoice(['happy','fast'])
+	console.log(song)
+	if(Engine.sounds['happy'].paused&& Engine.sounds['fast'].paused)
+		Engine.playMusic(song)	
+} )
