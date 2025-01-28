@@ -265,12 +265,13 @@ const Engine = {
 		animation:animation,
 		can:maincanvas,
 		stopMusic:stopMusic,
-		sounds:[ 
-			new Audio('./assets/dg.mp3') ,
-			new Audio('./assets/sad.mp3') ,
-			new Audio('./assets/happy.mp3') ,
-			new Audio('./assets/piu.mp3')
-		   ]
+		playMusic:playMusic,
+		sounds:{ 
+			dg:new Audio('./assets/dg.mp3') ,
+			sad:new Audio('./assets/sad.mp3') ,
+			happy:new Audio('./assets/happy.mp3') ,
+			piu:new Audio('./assets/piu.mp3')
+		    }
 		}
 
 const Mouse = {x:undefined,y:undefined,state:undefined}
@@ -306,21 +307,20 @@ maincanvas.addEventListener("touchstart",(e)=>{
 maincanvas.addEventListener("touchend",(e)=>{
 	Mouse.state=e.touches.length>0
 })
-function playMusic(k){
 
-if(!Engine.sounds||!Engine.sounds[k]) return 
-
-Engine.sounds[k].play()
-
-	
-}
 function stopMusic(){
+	if(Engine&&Engine.sounds)
 	for(let i in Engine.sounds)
-		{
-			
-			Engine.sounds[i].pause()
-			Engine.sounds[i]. currentTime=0
-} }
+	{
+		Engine.sounds[i].pause()
+		Engine.sounds[i].currentTime = 0
+	}
+} 
+
+function playMusic(name){
+	if(Engine&&Engine.sounds&&Engine.sounds[name])
+		Engine.sounds[name].play()
+}
 
 		
 		

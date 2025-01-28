@@ -95,15 +95,15 @@ document.body.onkeydown = function(e){
                   Engine.togle()
 				  if(!Engine.animation.on)
 				  {
-					  playing=false
+					  //playing=false
 					  Engine.stopMusic()
 				  }
 				  break	
 		case 'r': 
                   Engine.stopMusic()
-				  playing=true
-				  for(let i=1;i<10;i++)
-					sprites[i]=createMonster()
+				  //playing=true
+				  // for(let i=1;i<10;i++)
+					// sprites[i]=createMonster()
 				  sprites[0].pos.y=-0.9
 				  break
 		case 'm':		
@@ -119,7 +119,7 @@ document.body.onkeydown = function(e){
 function missile_fire(){
 	if(missile_count>0){
 					//missile_count--
-					if(Engine.sounds[3])Engine.sounds[3].play() 
+					Engine.playMusic('piu') 
 					for(let i in missiles)
 						if(missiles[i].pos.y>=2){
 							missiles[i].pos.x=sprites[0].pos.x
@@ -159,7 +159,7 @@ function animate(){
 				sp.pos.x=rnd( )
 				sp.v.y=rnd(-1,-0.3)
 				sp.v.x=rnd(0.1)
-				if(Engine.sounds[0])Engine.sounds[0].play() 
+				Engine.playMusic('dg') 
 				break 
 			}
 		}
@@ -205,8 +205,8 @@ function animate(){
 		   if(dist(sprites[0].pos,sprites[j].pos)<0.1){
 		      startFire(sprites[0])
 			  Engine.stopMusic()
-			  if(Engine.sounds[1])Engine.sounds[1].play()
-			  //sprites[0].pos.y=3
+			  Engine.playMusic('sad')
+			  sprites[0].pos.y=3
 			  break
 		   }
 		}
@@ -284,12 +284,15 @@ document.body.onload = function(){
 	Engine.resume(animate)
 }
 
-var playing = false
+//var playing = false
 
 document.body.addEventListener("mousedown",()=>{
-	if(!Engine.animation.on||playing|| Engine.sounds==undefined||Engine.sounds[2]==undefined)return
+	if(sprites[0].pos.y>2){
+		document.body.onkeydown({key:'r'})
+		return
+	}
+	if(!Engine.animation.on|| Engine.sounds==undefined||Engine.sounds['happy']==undefined||!Engine.sounds['happy'].paused)return
 	console.log('start song');
-	playing=true
-	Engine.sounds[2].play()
-	Engine.sounds[2].addEventListener("ended",()=>{playing=false}, true)
+	//playing=true
+	Engine.playMusic('happy')	
 })
