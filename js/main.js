@@ -239,12 +239,12 @@ function animate(){
 	{ 
 		Engine.messagebox.clear()
 		Engine.messagebox.print("fps:"+Math.round(1.0/dt))
-		Engine.messagebox.print("dt ="+Math.round(dt*1000.0)+"ms" )
+		//Engine.messagebox.print("dt ="+Math.round(dt*1000.0)+"ms" )
 		Engine.messagebox.print("press (a) to togle animation")
-		Engine.messagebox.print("press (1) or (2) to chose type of animation")
-		Engine.messagebox.print("press (t) to hide or show background objects")
-		Engine.messagebox.print("fires:"+fires.length)
-		Engine.messagebox.print("enemies:"+sprites.length)
+		Engine.messagebox.print("press (m) or (mouse) to fire")
+		//Engine.messagebox.print("press (t) to hide or show background objects")
+		// Engine.messagebox.print("fires:"+fires.length)
+		// Engine.messagebox.print("enemies:"+sprites.length)
 		
 	}
 	if(sprites[0].pos.y<2)Engine.playMusic()
