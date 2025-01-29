@@ -21,7 +21,7 @@ var missile_count = 0
 //----------------------------------------------
 function createAmmo(){
 	let sp = new Sprite({
-		color:[1,1,0,1],
+		color:[1,1,1,1],
 		pos:{x:rnd(),y:rnd(4,6)},
 		txPos:{x:0.75,y:0.25,xx:1,yy:0.5},
 		hw:0.1,hh:0.1})
