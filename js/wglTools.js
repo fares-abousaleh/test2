@@ -242,7 +242,7 @@ function createAlertBox(){
 	
 	let alertBox = document.createElement("span")	
 	
-	alertBox.print = function(s){
+	alertBox.print = function(s,clr){
 		alertBox.innerHTML += ""+s+"<br>"
 	}
 	

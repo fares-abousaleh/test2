@@ -118,21 +118,28 @@ document.body.onkeydown = function(e){
 					   
 		case 'a': Engine.stopSound()
                   Engine.togle()
+				  Engine.alertBox.clear()
 				  if(Engine.animation.on){
 					Engine.playMusic()
+					
 				  }
 				  else{
 					  Engine.stopMusic()
 					  Engine.stopSound()
+					  Engine.alertBox.print('PAUSE',"#faa")
+					  Engine.alertBox.print('press "a" to resume')
+					  break	// on purpose
 				  }
-				  break	
-		case 'r': 
-				  player.pos.y=-0.9
-				  Engine.stopSound()
-				  Engine.playMusic()
-				  Engine.alertBox.clear()
-				  score_hit = 0
-			      score_missed = 0
+				  
+		case 'r': if(Engine.animation.on){
+					  player.pos.y=-0.9
+					  Engine.stopSound()
+					  Engine.playMusic()
+					  Engine.alertBox.clear()
+					  score_hit = 0
+					  score_missed = 0
+					  missile_count = 3
+					}
 				  break
 		case 'm':		
                   missile_launch()				  
@@ -143,6 +150,7 @@ document.body.onkeydown = function(e){
 	
 	}
 }
+
 //--------------------------------------------
 // Search for inactive missile sprite
 // and init it at the position of the player. 
