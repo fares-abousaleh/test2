@@ -260,6 +260,8 @@ function createAlertBox(){
 			margin:0 px; 
 			padding:5px;
 			color: #ffa;
+                     text-align:center;
+		     valign:center;
 			z-index: 1;
 			min-width:512px;
 			user-select: none;
