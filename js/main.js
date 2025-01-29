@@ -1,16 +1,37 @@
 import { Engine , Mouse } from "./wglTools.js"
 import Sprite from "./sprites.js"
 
-var trianglesOn = true
+//----------------------------------------------
+// Globals
+//----------------------------------------------
 const SZ = 0.095
 const sprites = [new Sprite({txPos:{x:0.5,y:0,xx:0.75,yy:0.25},hw:SZ,hh:SZ})]
-sprites[0].v={x:0,y:0}
+const player = sprites[0]
+	  player.v={x:0,y:0}
 const clouds = []
 const missiles = []
+const ammos = []
 const fires = []
 var score_hit = 0
 var score_missed = 0
+var missile_count = 0
 
+//----------------------------------------------
+// create ammo sprite
+//----------------------------------------------
+function createAmmo(){
+	let sp = new Sprite({
+		color:[1,1,0,1],
+		pos:{x:rnd(),y:rnd(4,6)},
+		txPos:{x:0.75,y:0.25,xx:1,yy:0.5},
+		hw:0.1,hh:0.1})
+	sp.rot=0
+	return sp
+}
+
+//----------------------------------------------
+// create missile sprite
+//----------------------------------------------
 function createMissile(){
 	return new Sprite({
 		color:[1,1,1,1],
@@ -18,7 +39,9 @@ function createMissile(){
 		txPos:{x:0.5,y:0.25,xx:0.75,yy:0.5},
 		hw:0.1,hh:0.06})
 }
-
+//----------------------------------------------
+// create fire sprite
+//----------------------------------------------
 function createFire(sp){
 	const fr = new Sprite({
 		color:[1,1,1,1],
@@ -29,6 +52,11 @@ function createFire(sp){
 	return fr
 }
 
+//----------------------------------------
+// Search for inactive fire sprite 
+// and init it at the position 
+// of the given sprite
+//----------------------------------------
 function startFire(sp){
 	for(let i in fires)
 		if(fires[i].hw>1){
@@ -38,20 +66,28 @@ function startFire(sp){
 	fires.push( createFire(sp) )		
 }
 
-function createMonster(){
+//----------------------------------------------
+// creates a new monster sprite 
+// or resets an existing one if (sp) is defined
+//----------------------------------------------
+function createMonster(sp){
+	sp = sp || new Sprite({})
 	const y = 0.25*rndInt(0,2)
 	const w = rnd(0.5*SZ,SZ)
-	const sp =  new Sprite({
-		color:[1,1,1,1],
-		pos:{x:rnd(),y:rnd()},
-		txPos:{x:0,y:y,xx:0.25,yy:y+0.25},
-		hw:w,hh:w})
+	sp.color=[1,1,1,1]
+	sp.pos={x:rnd(),y:rnd()}
+	sp.txPos={x:0,y:y,xx:0.25,yy:y+0.25}
+	sp.hw=w
+	sp.hh=w
 	sp.v={x:rnd(0.1),y:rnd(-2,-1)}
 	sp.rot=rnd(0.05)
 	return sp
 }
 
-
+//----------------------------------------------
+// creates a new cloud sprite 
+// or resets an existing one if (sp) is defined
+//----------------------------------------------
 function createCloud(sp){
 	const w = rnd(1.2,2.4)
 	sp = sp || new Sprite({})
@@ -63,18 +99,9 @@ function createCloud(sp){
 	sp.rot=rnd(3.14159)
 	return sp
 }
-
-for(let i=0;i<10;i++)
-	missiles[i] = createMissile()
-
-for(let i=1;i<10;i++)
-	sprites[i]=createMonster()
-
-var missile_count = 3
-
-for(let i=0;i<10;i++)
-		clouds[i] = createCloud()
-	
+//----------------------------------------------
+// Event listener for keyboard
+//----------------------------------------------
 document.body.onkeydown = function(e){
 	
 	switch(e.key){
@@ -89,9 +116,6 @@ document.body.onkeydown = function(e){
 		          Engine.messagebox.clear()
 				  break
 					   
-		case 't': trianglesOn = !trianglesOn
-				  break
-				 
 		case 'a': Engine.stopSound()
                   Engine.togle()
 				  if(Engine.animation.on){
@@ -103,7 +127,7 @@ document.body.onkeydown = function(e){
 				  }
 				  break	
 		case 'r': 
-				  sprites[0].pos.y=-0.9
+				  player.pos.y=-0.9
 				  Engine.stopSound()
 				  Engine.playMusic()
 				  Engine.alertBox.clear()
@@ -111,7 +135,7 @@ document.body.onkeydown = function(e){
 			      score_missed = 0
 				  break
 		case 'm':		
-                  missile_fire()				  
+                  missile_launch()				  
 				  break		
 		default: 
 				  Engine.messagebox.clear()
@@ -119,28 +143,32 @@ document.body.onkeydown = function(e){
 	
 	}
 }
-
-function missile_fire(){
+//--------------------------------------------
+// Search for inactive missile sprite
+// and init it at the position of the player. 
+//--------------------------------------------
+function missile_launch(){
 	if(missile_count>0){
-					//missile_count--
+					missile_count--
 					Engine.playSound('piu') 
 					for(let i in missiles)
 						if(missiles[i].pos.y>=2){
-							missiles[i].pos.x=sprites[0].pos.x
-							missiles[i].pos.y=sprites[0].pos.y
+							missiles[i].pos.x=player.pos.x
+							missiles[i].pos.y=player.pos.y
 							break
 						}
-				  }	
+				  }else Engine.playSound('bao')	
 }
 	
-
+//----------------------------------------
+// main loop: animate sprites and render
+// interact with inputs
+//----------------------------------------
 function animate(){
 	 const dt  = Engine.dtime()
 	 const t   = Engine.time()
-	 
-	  
-	//--- draw random triangles
-	if(trianglesOn)
+	 	
+	//--- draw random clouds in background
 	for(let i in clouds){
 					  clouds[i].add({x:0,y:0}, t*(0.1+i*0.01))
 					  clouds[i].pos.y -= dt*(1+0.053*i)
@@ -149,6 +177,28 @@ function animate(){
 					  }
 				}
 				  
+	
+	//--- draw ammos
+	for(let i in ammos){
+		const m = ammos[i]
+		m.rot -= rnd(2,3)*dt
+		m.pos.y -= 1*dt
+		if(m.pos.y<-1.3){
+			m.pos.y=rnd(4,6)
+			m.pos.x=rnd()
+		}else
+		if(m.pos.y<1.3){
+		m.add(undefined,ammos[i].rot)
+		if(dist(m.pos,player.pos)<player.hw)//collect ammo
+			{
+				missile_count+=10
+				Engine.playSound('ammo_collect')
+				m.pos.y=rnd(4,9)
+				m.pos.x=rnd()	
+			}
+		}
+	}
+	
 	//-- animate enemies ----------------			  
 	for(let i=1;i<sprites.length;i++)
 	{
@@ -183,39 +233,38 @@ function animate(){
 		if(sp.pos.y<-1.5){
 			sp.pos.y=rnd(2,2.7)
 			sp.pos.x=rnd( )
-			if(sprites[0].pos.y<2)score_missed+=1
+			if(player.pos.y<2)score_missed+=1
 		}
 	}
 	
-	if(sprites[0].pos.y<2)
+	if(player.pos.y<2)
 	{
-		const d = dist(sprites[0].pos,Mouse)
+		const d = dist(player.pos,Mouse)
 		if(d>0.05)
 		{
-			sprites[0].v.x = dt*513*(Mouse.x - sprites[0].pos.x)
-			sprites[0].v.y = dt*513*(Mouse.y - sprites[0].pos.y)
-			sprites[0].pos.x += dt*sprites[0].v.x
-			sprites[0].pos.y += dt*sprites[0].v.y
-			sprites[0].pos.x = sat(sprites[0].pos.x ,-1,1)
-			sprites[0].pos.y = sat(sprites[0].pos.y ,-1,1)
+			player.v.x = dt*513*(Mouse.x - player.pos.x)
+			player.v.y = dt*513*(Mouse.y - player.pos.y)
+			player.pos.x += dt*player.v.x
+			player.pos.y += dt*player.v.y
+			player.pos.x = sat(player.pos.x ,-1,1)
+			player.pos.y = sat(player.pos.y ,-1,1)
 		}		
 		else
 		if(Mouse.state>0) // triger missile		
 		{
 			Mouse.state=0
-			missile_fire()
-			
+			missile_launch()
 		}
 		//--- collisions with monsters	
 		for(let j=1;j<sprites.length;j++){
-		   if(dist(sprites[0].pos,sprites[j].pos)<0.1){
-		      startFire(sprites[0])
+		   if(dist(player.pos,sprites[j].pos)<0.1){
+		      startFire(player)
 			  Engine.stopMusic()
 			  Engine.playSound('sad')
 			  Engine.alertBox.print('Game Over')
 			   
 			  Engine.alertBox.print('click to resume')
-			  sprites[0].pos.y=3
+			  player.pos.y=3
 			  break
 		   }
 		}
@@ -241,7 +290,7 @@ function animate(){
 		}
 	}
 	
-	sprites[0].add( {x:0.06*Math.sin(4*t),y:0.06*Math.sin(3*t)})
+	player.add( {x:0.06*Math.sin(4*t),y:0.06*Math.sin(3*t)})
 	
 	
 	
@@ -249,52 +298,72 @@ function animate(){
 	{ 
 		Engine.messagebox.clear()
 		Engine.messagebox.print('score:'+Math.round(score_hit*100.0/(score_hit+score_missed+1.0))+'%')
+		Engine.messagebox.print("ammo:"+missile_count)
+	    
 		Engine.messagebox.print("fps:"+Math.round(1.0/dt))
 		Engine.messagebox.print("press (a) to togle animation")
 		Engine.messagebox.print("press (m) or (mouse) to fire")
 	}
 	
 	
-	if(Engine.animation.on&&sprites[0].pos.y<2)Engine.playMusic()
+	if(Engine.animation.on&&player.pos.y<2)Engine.playMusic()
 	Engine.draw()
 	
 }
 
+//----------------------------------------
+// alternative main loop for testing purpose.
+// Animate sprites and render
+// interact with inputs
+//----------------------------------------
 function animate1(){
 	 
 	const dt = Engine.dtime()
 	const t = Engine.time()
 	
-	sprites[0].hw *=2
-	sprites[0].hh *=2
+	player.hw *=2
+	player.hh *=2
 	
-	sprites[0].add(undefined, 8.0*Engine.time() )
-	sprites[0].pos.x += rnd(0.08) 
-	sprites[0].pos.y += rnd(0.08)
+	player.add(undefined, 8.0*Engine.time() )
+	player.pos.x += rnd(0.08) 
+	player.pos.y += rnd(0.08)
 	
-	sprites[0].hw *=0.5
-	sprites[0].hh *=0.5
+	player.hw *=0.5
+	player.hh *=0.5
 	if(rnd(0,100)<12)
 	{ 
 		Engine.messagebox.clear()
 		Engine.messagebox.print("fps:"+Math.round(1.0/dt))
 		Engine.messagebox.print("dt ="+Math.round(dt*1000.0)+"ms" )
-	}
+		}
 	Engine.draw()
 	
 }
-
+//-----------------------------------------
+// main entry for program
+// init sprites and Engine
+//-----------------------------------------
 document.body.onload = function(){		
-	Engine.messagebox.print("Press 'a' to stop or resume animation.")
-	Engine.messagebox.print("Press 't' to show or hide triangles.")
-	Engine.messagebox.print("Press 'Escape' to erase text.")
+	for(let i=0;i<10;i++)
+		missiles[i] = createMissile()
+
+	for(let i=1;i<10;i++)
+		sprites[i]=createMonster()
+	
+	for(let i=0;i<10;i++)
+		clouds[i] = createCloud()
+	
+	missile_count = 3
+	for(let i=0;i<4;i++)
+		ammos[i] = createAmmo()
+
 	Engine.addMusic(['happy','fast'])
-	Engine.addSound(['piu','dg','sad'])
+	Engine.addSound(['piu','dg','sad','bao','ammo_collect'])
 	Engine.resume(animate)
 }
 
 document.body.addEventListener("mousedown",() => {
-	if(sprites[0].pos.y>2){
+	if(player.pos.y>2){
 		document.body.onkeydown({key:'r'})
 		return
 	}

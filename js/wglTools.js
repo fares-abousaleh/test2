@@ -158,7 +158,6 @@ function drawAll(){
 		setBuffer(tbuf,  tArr )
 		ctx.drawArrays(ctx.TRIANGLES,0,vNum);	 
 	}else {
-		// alert("waiting for images...")
 		messagebox.clear()
 		messagebox.print("waiting for images to load...")
 	}
@@ -252,7 +251,6 @@ function createAlertBox(){
 	}
 	
 	const x = CAN_SIZE / 8
-	const y = 4 * CAN_SIZE / 9
 	const w = 3 * CAN_SIZE / 4
 	alertBox.setAttribute("style",`
 			position:absolute;
@@ -260,8 +258,11 @@ function createAlertBox(){
 			margin:0 px; 
 			padding:5px;
 			color: #ffa;
-                     text-align:center;
-		     valign:center;
+			text-align:center;
+			pointer-events:none;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			z-index: 1;
 			min-width:512px;
 			user-select: none;
@@ -269,9 +270,9 @@ function createAlertBox(){
 			font-size:2em;
 			top:`+x+`px;
 			left:`+x+`px;
-			width:`+w+`;
-			height:`+w+`;
-	`)
+			width:`+w+`px;
+			height:`+w+`px;`)
+	
 	document.body.appendChild(alertBox)	
 	return alertBox
 }	
