@@ -355,7 +355,7 @@ document.body.onload = function(){
 	for(let i=0;i<10;i++)
 		missiles[i] = createMissile()
 
-	for(let i=1;i<10;i++)
+	for(let i=1;i<5;i++)
 		sprites[i]=createMonster()
 	
 	for(let i=0;i<10;i++)
