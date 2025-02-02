@@ -242,7 +242,7 @@ function createAlertBox(){
 	
 	let alertBox = document.createElement("span")	
 	
-	alertBox.print = function(s,clr){
+	alertBox.print = function(s){
 		alertBox.innerHTML += ""+s+"<br>"
 	}
 	
@@ -384,10 +384,13 @@ function stopSound(){
 
 function playMusic(){
 	for(let m in Engine.music)
-		if(Engine.music[m]&&!Engine.music[m].paused)return
+		if(Engine.music[m]&&!Engine.music[m].paused)
+			return
 	const sng = rndChoice(music_names)
-	if(Engine.music[sng])
+	if(Engine.music[sng]){
+		Engine.music[sng].currentTime=0
 		Engine.music[sng].play()
+	}
 }
 
 function playSound(m){
