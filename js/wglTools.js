@@ -355,16 +355,18 @@ maincanvas.onmousemove = function(e){
 	 
 }
 
-maincanvas.addEventListener("touchstart",(e)=>{
+function touchHandler(e){
 	const rec = maincanvas.getBoundingClientRect()
 	Mouse.x = -1.0+2.0*(e.touches[0].clientX - rec.x)/rec.width
 	Mouse.y = +1.0-2.0*(e.touches[0].clientY - rec.y)/rec.height
 	Mouse.state=e.touches.length>0
-})
+}
 
-maincanvas.addEventListener("touchend",(e)=>{
-	Mouse.state=e.touches.length>0
-})
+maincanvas.addEventListener("touchstart",touchHandler)
+
+maincanvas.addEventListener("touchend",touchHandler)
+
+maincanvas.addEventListener("touchmove",touchHandler)
 
 function stopMusic(){
 	for(let i in Engine.music)
