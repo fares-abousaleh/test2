@@ -10,11 +10,13 @@ const player = sprites[0]
 	  player.v={x:0,y:0}
 const clouds = []
 const missiles = []
+const bombs = []
 const ammos = []
 const fires = []
 var score_hit = 0
 var score_missed = 0
 var missile_count = 0
+var last_bomb = {x:-100,y:-100,t:-1000}
  
 //----------------------------------------------
 // create ammo sprite
@@ -38,6 +40,16 @@ function createMissile(){
 		pos:{x:0,y:2},
 		txPos:{x:0.5,y:0.25,xx:0.75,yy:0.5},
 		hw:0.1,hh:0.06})
+}
+//----------------------------------------------
+// create bomb sprite
+//----------------------------------------------
+function createBomb(){
+	return new Sprite({
+		color:[1,1,1,1],
+		pos:{x:rnd(),y:rnd(11 ,25)},
+		txPos:{x:0.25,y:0,xx:0.5,yy:0.25},
+		hw:0.06,hh:0.06})
 }
 //----------------------------------------------
 // create fire sprite
@@ -82,6 +94,16 @@ function createMonster(sp){
 	sp.v={x:rnd(0.1),y:rnd(-2,-1)}
 	sp.rot=rnd(0.05)
 	return sp
+}
+//--- reset Monster 
+function dieMonster(sp){
+	startFire(sp)
+	sp.pos.y=rnd(2,3)
+	sp.pos.x=rnd( )
+	sp.v.y=rnd(-1,-0.3)
+	sp.v.x=rnd(0.1)
+	Engine.playSound('dg') 
+	score_hit+=1				
 }
 
 //----------------------------------------------
@@ -205,20 +227,22 @@ function animate(){
 	for(let i=1;i<sprites.length;i++)
 	{
 		const sp = sprites[i]
-		//---collision with missile
-		if(sp.pos.y<1.1)
-		for(let j in missiles){
+		
+		if(sp.pos.y<1.1){
+			
+		if(Math.abs(dist(sp.pos,last_bomb)-2.0*(Engine.time()-last_bomb.t))<0.3)
+		{//---collision with bomba wave
+			dieMonster(sp)
+		}
+		else
+	    for(let j in missiles){
+			//---collision with missile 
 			if(dist(missiles[j].pos,sp.pos)<0.1451){
-				startFire(sp)
+				dieMonster(sp)
 				missiles[j].pos.y=3
-				sp.pos.y=rnd(2,3)
-				sp.pos.x=rnd( )
-				sp.v.y=rnd(-1,-0.3)
-				sp.v.x=rnd(0.1)
-				Engine.playSound('dg') 
-				score_hit+=1
 				break 
 			}
+		}
 		}
 		
 			//-- update monsters position and speed
@@ -282,6 +306,28 @@ function animate(){
 			
 		}
 	}
+	//-- animate bombs
+	for(let i in bombs){
+		const b = bombs[i]
+		if(b.pos.y>-1.3&&b.pos.y<1.3)b.add()
+		b.pos.y-=dt
+		if(b.pos.y<-2){
+			b.pos.x=rnd()
+			b.pos.y=rnd(1.5,4)
+		}
+		if(dist(b.pos,player.pos)<0.1){
+			//-- use bomba
+			Engine.setUnif('bombX',b.pos.x)
+			Engine.setUnif('bombY',b.pos.y)
+			Engine.setUnif('bombT',Engine.time())
+			b.pos.x=rnd()
+			b.pos.y=rnd(11,25)
+			Engine.playSound('dg')
+			last_bomb.t = Engine.time()
+			last_bomb.x=player.pos.x
+			last_bomb.y=player.pos.y
+		}
+	}
 	
 	//-- animate explosions
 	for(let i in fires ) 
@@ -303,8 +349,12 @@ function animate(){
 	{ 
 		
 		Engine.messagebox.clear()
-		Engine.messagebox.print('score:'+Math.round(score_hit*100.0/(score_hit+score_missed+1.0))+'%')
+		Engine.messagebox.print('hit:'+score_hit)
+		const pc = Math.round(score_hit*100.0/(score_hit+score_missed+1.0))
+		Engine.messagebox.print('percentage:'+pc+'%')
 		Engine.messagebox.print("ammo:"+missile_count)
+		Engine.messagebox.print("score:"+(0+missile_count+score_hit+pc))
+		Engine.messagebox.print("<hr>")
 		Engine.messagebox.print("fps:"+Math.round(1.0/dt))
 		Engine.messagebox.print("press (a) to toggle animation on/off")
 		Engine.messagebox.print("press (m) or (mouse) to fire")
@@ -359,6 +409,9 @@ document.body.onload = function(){
 	
 	for(let i=0;i<10;i++)
 		clouds[i] = createCloud()
+	
+	for(let i=0;i<3;i++)
+		bombs[i] = createBomb()
 	
 	missile_count = 3
 	for(let i=0;i<4;i++)

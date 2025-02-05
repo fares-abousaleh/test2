@@ -314,7 +314,8 @@ const Engine = {
 		music:{ },
 		addMusic:addMusic,
 		addSound:addSound,
-		alertBox:alertBox
+		alertBox:alertBox,
+		setUnif:setUnif,
 		}
 
 const music_names=[]
