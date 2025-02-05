@@ -322,7 +322,7 @@ function animate(){
 			Engine.setUnif('bombT',Engine.time())
 			b.pos.x=rnd()
 			b.pos.y=rnd(11,25)
-			 
+			Engine.playSound('bom') 
 			last_bomb.t = Engine.time()
 			last_bomb.x=player.pos.x
 			last_bomb.y=player.pos.y
@@ -418,7 +418,7 @@ document.body.onload = function(){
 		ammos[i] = createAmmo()
 	Engine.setUnif('bombT',-1000.0)
 	Engine.addMusic(['happy','fast'])
-	Engine.addSound(['piu','dg','sad','bao','ammo_collect'])
+	Engine.addSound(['bom','piu','dg','sad','bao','ammo_collect'])
 	Engine.resume(animate)
 }
 
