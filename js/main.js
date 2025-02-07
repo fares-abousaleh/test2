@@ -15,7 +15,7 @@ const ammos = []
 const fires = []
 var score_hit = 0
 var score_missed = 0
-var missile_count = 0
+var missile_count = 10
 var last_bomb = {x:-100,y:-100,t:-1000}
  
 //----------------------------------------------
@@ -156,6 +156,7 @@ document.body.onkeydown = function(e){
 				  Engine.alertBox.clear()
 				  score_hit = 0
 			      score_missed = 0
+				  missile_count=10
 				  break
 		case 'm':		
                   missile_launch()
@@ -252,7 +253,7 @@ function animate(){
 			 
 			sp.pos.x=sat(sp.pos.x,-0.95,0.95)
 			if(rndDecide(0.6)){
-				sp.v.x -= Math.sign(sp.pos.x)*rnd(1 ,3)*dt
+				sp.v.x -= Math.sign(sp.pos.x)*rnd(0.1 ,0.3)*dt
 				sp.v.y += rnd(33)*dt
 			}
 			sp.v.y  = sat(sp.v.y,-1,-0.3)
@@ -268,7 +269,7 @@ function animate(){
 	if(player.pos.y<2)
 	{
 		const d = dist(player.pos,Mouse)
-		if(d>0.05)
+		if(d>0.08)
 		{
 			player.v.x = dt*513*(Mouse.x - player.pos.x)
 			player.v.y = dt*513*(Mouse.y - player.pos.y)

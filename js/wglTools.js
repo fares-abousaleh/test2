@@ -1,4 +1,4 @@
-const CAN_SIZE = 650
+const CAN_SIZE = 512
 
 import {fragmentShader} from "./fragmentShader.js"
 
